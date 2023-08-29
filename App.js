@@ -12,6 +12,12 @@ const styles = StyleSheet.create({
   goalsList: {
     flex: 5
   },
+  emptyGoals:{
+    fontSize:55,
+    margin:10,
+    textAlign:'center',
+    fontWeight:'500'
+  }
 
 });
 
@@ -19,7 +25,7 @@ export default function App() {
 
   const [enteredGOAL, setEnteredGOAL] = useState('');
   const [courseGoals, setCourseGoals] = useState([]);
-  const [modal,setModal]=useState(false);
+  const [modal, setModal] = useState(false);
 
   function goalInputHandler(enteredText) {
     setEnteredGOAL(enteredText);
@@ -31,28 +37,33 @@ export default function App() {
     setEnteredGOAL("");
     setModalHandler();
   }
-  function deletGoalHandler(id){
-    console.log('deletteee sheeeeshh',id);
+  function deletGoalHandler(id) {
+    console.log('deletteee sheeeeshh', id);
     setCourseGoals(goalList => {
-      return goalList.filter((goal)=> goal.key !== id);
+      return goalList.filter((goal) => goal.key !== id);
     });
   }
 
-  function setModalHandler(){
-    setModal(prev=>!prev)
+  function setModalHandler() {
+    setModal(prev => !prev)
   }
 
   return (
-    <View style={styles.appContainer}>
-      <Button title="Add New Goal" onPress={setModalHandler}/>
-    <GoalInput AddGoal={addGoalHandler} SetInput={goalInputHandler} 
-    currentInput={enteredGOAL}
-      modalState={modal}
-      ChangeModal={setModalHandler}
-      />
-      <View style={styles.goalsList}>
-        {/* remember Scrollview needs a parent div to get styling */}
-        {/* <ScrollView >
+    <>
+      <StatusBar style='light' />
+      <View style={styles.appContainer}>
+        <Button title="Add New Goal" onPress={setModalHandler}
+          color={'#BA4A00'}
+
+        />
+        <GoalInput AddGoal={addGoalHandler} SetInput={goalInputHandler}
+          currentInput={enteredGOAL}
+          modalState={modal}
+          ChangeModal={setModalHandler}
+        />
+        <View style={styles.goalsList}>
+          {/* remember Scrollview needs a parent div to get styling */}
+          {/* <ScrollView >
         {courseGoals.map((val, i) =>
         //import note : View only supports rounded corners for both ios 
         //and android
@@ -62,20 +73,23 @@ export default function App() {
           </View>
         )}
       </ScrollView> */}
-        <FlatList
-          data={courseGoals}
-          renderItem={(goalsData) => {
-            return (
-              <GoalItem text={goalsData.item.text}
-              id={goalsData.item.key}
-               onDeleteItem={deletGoalHandler}/>
-            );
+          <Text style={styles.emptyGoals}>What are your goals for today?</Text>
+          <FlatList
+            data={courseGoals}
+            renderItem={(goalsData) => {
+              return (
+                <GoalItem text={goalsData.item.text}
+                  id={goalsData.item.key}
+                  onDeleteItem={deletGoalHandler} />
+              );
 
-          }}
-          keyExtractor={(item, index) => item.key}
-        />
+            }}
+            keyExtractor={(item, index) => item.key}
+          />
+
+        </View>
       </View>
-    </View>
+    </>
   );
 }
 
