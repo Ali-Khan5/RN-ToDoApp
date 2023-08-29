@@ -19,19 +19,37 @@ export default function App() {
 
   const [enteredGOAL, setEnteredGOAL] = useState('');
   const [courseGoals, setCourseGoals] = useState([]);
+  const [modal,setModal]=useState(false);
+
   function goalInputHandler(enteredText) {
     setEnteredGOAL(enteredText);
   }
   function addGoalHandler() {
     setCourseGoals(goalList => [...goalList, {
       text: enteredGOAL, key: Math.random().toString()
-    }]
-    );
-    // setEnteredGOAL('');
+    }]);
+    setEnteredGOAL("");
+    setModalHandler();
   }
+  function deletGoalHandler(id){
+    console.log('deletteee sheeeeshh',id);
+    setCourseGoals(goalList => {
+      return goalList.filter((goal)=> goal.key !== id);
+    });
+  }
+
+  function setModalHandler(){
+    setModal(prev=>!prev)
+  }
+
   return (
     <View style={styles.appContainer}>
-      <GoalInput AddGoal={addGoalHandler} SetInput={goalInputHandler} />
+      <Button title="Add New Goal" onPress={setModalHandler}/>
+    <GoalInput AddGoal={addGoalHandler} SetInput={goalInputHandler} 
+    currentInput={enteredGOAL}
+      modalState={modal}
+      ChangeModal={setModalHandler}
+      />
       <View style={styles.goalsList}>
         {/* remember Scrollview needs a parent div to get styling */}
         {/* <ScrollView >
@@ -48,11 +66,13 @@ export default function App() {
           data={courseGoals}
           renderItem={(goalsData) => {
             return (
-              <GoalItem text={goalsData.item.text} />
+              <GoalItem text={goalsData.item.text}
+              id={goalsData.item.key}
+               onDeleteItem={deletGoalHandler}/>
             );
 
           }}
-          keyExtractor={(item, index) => item.id}
+          keyExtractor={(item, index) => item.key}
         />
       </View>
     </View>
